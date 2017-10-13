@@ -1,0 +1,23 @@
+{
+  "name": "koa-mock",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development node ./bin/www",
+    "dev": "cross-env NODE_ENV=development nodemon ./bin/www",
+    "build": "pm2 restart ecosystem.config.js --env production",
+    "clean": "rm ./logs/*",
+    "test": "cross-env NODE_ENV=test mocha -t 10000 test/api/*"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cross-env": "^5.0.5",
+    "nodemon": "^1.12.1"
+  },
+  "dependencies": {
+    "koa": "^2.3.0",
+    "koa-router": "^7.2.1"
+  }
+}

@@ -1,12 +1,11 @@
 const router = require('koa-router')();
 const {
-    index,
-    test,
+  registered,
+  checkLogin,
 } = require('../controllers/users.controller');
+const {isAuthenticated} = require('../auth/auth.service');
 
-router.get('/', index);
-
-router.get('/test', test);
-
+router.post('/registered', registered);
+router.get('/checkLogin', isAuthenticated(), checkLogin);
 
 module.exports = router;

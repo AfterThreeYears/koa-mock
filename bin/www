@@ -1,3 +1,7 @@
 const app = require('../app');
 
+app.on('error',(err, ctx) => {
+	console.error('error', err);
+});
+
 app.listen(5555);

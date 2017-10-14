@@ -13,11 +13,27 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "babel-eslint": "^8.0.1",
     "cross-env": "^5.0.5",
+    "eslint": "^4.8.0",
+    "eslint-plugin-babel": "^4.1.2",
+    "eslint-plugin-html": "^3.2.2",
     "nodemon": "^1.12.1"
   },
   "dependencies": {
+    "kcors": "^2.2.1",
     "koa": "^2.3.0",
-    "koa-router": "^7.2.1"
+    "koa-bodyparser": "^4.2.0",
+    "koa-compress": "^2.0.0",
+    "koa-generic-session": "^2.0.0",
+    "koa-json": "^2.0.2",
+    "koa-jwt": "^3.2.2",
+    "koa-logger": "^3.1.0",
+    "koa-passport": "^4.0.1",
+    "koa-redis": "^3.1.1",
+    "koa-response-time": "^2.0.0",
+    "koa-router": "^7.2.1",
+    "mongoose": "^4.9.0",
+    "passport-local": "^1.0.0"
   }
 }

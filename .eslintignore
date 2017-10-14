@@ -1,0 +1,7 @@
+build/
+node_modules/
+src/app/module/Uploader/qiniu.js
+src/app/module/SKUTable/*
+src/app/module/components/base/popper.js
+src/app/module/bcm.js
+src/app/common/directives/transfer-dom.js

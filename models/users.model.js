@@ -24,18 +24,26 @@ const UserSchema = new Schema({
     email: String,
     name: String,
   },
-  avatar: String,
+  avatar: {
+    type: String,
+    default: 'https://avatars2.githubusercontent.com/u/11870071?v=4&s=120',
+  },
   status: {
     type: Number,
     default: 0,
   },
-  created: {
+  createTime: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
-  updated: {
+  updateTime: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
+  },
+}, {
+  timestamps: {
+    createdAt: 'createTime',
+    updatedAt: 'updateTime',
   },
 });
 
@@ -107,5 +115,4 @@ UserSchema.methods = {
 
 UserSchema.set('toObject', {virtuals: true});
 
-// exports.UserSchema = UserSchema;
 module.exports = mongoose.model('User', UserSchema, 'users');

@@ -28,7 +28,7 @@ function isAuthenticated() {
   return compose([
     authToken(),
     async (ctx, next) => {
-      if (!ctx.state.user) return ctx.body = {errorMsg: '过期了', success: false};
+      if (!ctx.state.user) return ctx.body = {errorMsg: '请登录', success: false};
       await next();
     },
     async (ctx, next) => {

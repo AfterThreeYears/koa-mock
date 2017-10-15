@@ -1,4 +1,5 @@
 const Project = require('../models/projects.model');
+const {errMsgFormat} = require('../util/tools');
 
 const create = async (ctx) => {
   const {name, basepath, desc, project_type} = ctx.request.body;
@@ -20,11 +21,11 @@ const create = async (ctx) => {
     ],
   });
   try {
-    const doc = await newProjetc.save();
-    ctx.body = {success: true, data: doc};
+    await newProjetc.save();
+    ctx.body = {success: true, data: true};
   } catch (error) {
     ctx.body = {
-      errorMsg: error,
+      errorMsg: errMsgFormat(error.errors),
       success: false,
     };
   }

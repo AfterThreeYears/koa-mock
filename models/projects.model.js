@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const ProjectSchema = new Schema({
   name: {
     type: String,
-    required: true,
     unique: true,
   },
   basepath: {
@@ -42,5 +41,20 @@ const ProjectSchema = new Schema({
     updatedAt: 'updateTime',
   },
 });
+
+ProjectSchema
+  .path('name')
+  .validate({
+    isAsync: true,
+    validator: function(v, cb) {
+      this.constructor.findOne({name: v}, function(err, project) {
+        if (project) {
+          cb(false);
+        }
+        cb(true);
+      });
+    },
+    message: '这个项目名已经被使用!',
+  });
 
 module.exports = mongoose.model('Project', ProjectSchema, 'projects');

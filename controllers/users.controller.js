@@ -1,7 +1,9 @@
 const User = require('../models/users.model');
+const {errMsgFormat} = require('../util/tools');
 
 const registered = async (ctx) => {
   const {username, password, email} = ctx.request.body;
+  console.log(username, password, email);
   const newUser = new User({
     username,
     password,
@@ -14,8 +16,9 @@ const registered = async (ctx) => {
       data: true,
     };
   } catch (error) {
+    console.log(error);
     ctx.body = {
-      errorMsg: Object.values(error.errors).map((item) => item.message).join('\b'),
+      errorMsg: errMsgFormat(error.errors),
       success: false,
     };
   }

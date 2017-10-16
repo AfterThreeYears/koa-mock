@@ -1,4 +1,5 @@
 const Project = require('../models/projects.model');
+const mongoose = require('mongoose');
 const {errMsgFormat} = require('../util/tools');
 
 const create = async (ctx) => {
@@ -31,6 +32,58 @@ const create = async (ctx) => {
   }
 };
 
+const update = async (ctx) => {
+  const {name, basepath, desc, project_type, id} = ctx.request.body;
+  const {username} = ctx.req.user;
+  if (!name) return ctx.body = {success: false, errMsg: '项目名是必填的'};
+  if (!project_type) return ctx.body = {success: false, errMsg: '项目类型是必填的'};
+  try {
+    const doc = await Project.update(
+      {_id: id, 'members.username': username},
+      {name, basepath, desc, project_type}
+    );
+    ctx.body = doc;
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      errorMsg: error.message,
+      success: false,
+    };
+  }
+};
+
+const alllist = async (ctx) => {
+  const {username} = ctx.req.user;
+  try {
+    const doc = await Project.find({});
+    const projects = doc.filter((item) => {
+      if (item.project_type === 'public') return item;
+      const findUser = item.members.find((subItem) => {
+        return subItem.username === username;
+      });
+      if (findUser) return item;
+    });
+    ctx.body = {success: true, data: projects};
+  } catch (error) {
+    console.log(error);
+    ctx.body = {success: false, errMsg: error.message};
+  }
+};
+
+const getOne = async (ctx) => {
+  const id = ctx.params.id;
+  try {
+    const doc = await Project.findById({_id: id});
+    ctx.body = {success: true, data: doc};
+  } catch (error) {
+    console.log(error);
+    ctx.body = {success: false, errMsg: error.message};
+  }
+};
+
 module.exports = {
   create,
+  update,
+  alllist,
+  getOne,
 };

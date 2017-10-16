@@ -3,7 +3,6 @@ const {errMsgFormat} = require('../util/tools');
 
 const registered = async (ctx) => {
   const {username, password, email} = ctx.request.body;
-  console.log(username, password, email);
   const newUser = new User({
     username,
     password,

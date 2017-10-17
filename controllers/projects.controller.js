@@ -1,5 +1,4 @@
 const Project = require('../models/projects.model');
-const mongoose = require('mongoose');
 const {errMsgFormat} = require('../util/tools');
 
 const create = async (ctx) => {
@@ -38,10 +37,11 @@ const update = async (ctx) => {
   if (!name) return ctx.body = {success: false, errMsg: '项目名是必填的'};
   if (!project_type) return ctx.body = {success: false, errMsg: '项目类型是必填的'};
   try {
-    const doc = await Project.update(
+    const doc = await Project.findOneAndUpdate(
       {_id: id, 'members.username': username},
       {name, basepath, desc, project_type}
     );
+    if (!doc) throw new Error('没有权限');
     ctx.body = doc;
   } catch (error) {
     console.log(error);

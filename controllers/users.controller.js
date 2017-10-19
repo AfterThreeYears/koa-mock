@@ -59,9 +59,23 @@ const userinfo = async (ctx) => {
   ctx.body = {id, username, email, avatar, updateTime, createTime};
 };
 
+const userlist = async (ctx) => {
+  try {
+    const doc = await User.find();
+    const list = doc.map(({id, username, email, avatar, updateTime, createTime}) => {
+      return {id, username, email, avatar, updateTime, createTime};
+    });
+    ctx.body = {success: true, data: list};
+  } catch (error) {
+    console.log(error);
+    ctx.body = {success: false, errMsg: error.message};
+  }
+};
+
 module.exports = {
   registered,
   checkLogin,
   update,
   userinfo,
+  userlist,
 };

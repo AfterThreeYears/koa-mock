@@ -16,15 +16,11 @@ const ProjectSchema = new Schema({
     required: true,
     enum: ['public', 'private'],
   },
-  members: [
-    {
-      uid: String,
-      role: {
-        type: String,
-        enum: ['owner', 'dev'],
-      },
-    },
-  ],
+  owner: {
+    type: String,
+    required: true,
+  },
+  members: Array,
   createTime: {
     type: Date,
     default: Date.now,

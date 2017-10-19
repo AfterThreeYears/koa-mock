@@ -4,6 +4,7 @@ const {
   update,
   alllist,
   getOne,
+  addMembers,
 } = require('../controllers/projects.controller');
 const {isAuthenticated} = require('../auth/auth.service');
 
@@ -14,5 +15,7 @@ router.post('/update', isAuthenticated(), update);
 router.get('/alllist', isAuthenticated(), alllist);
 
 router.get('/:id', isAuthenticated(), getOne);
+
+router.post('/addmembers', isAuthenticated(), addMembers);
 
 module.exports = router;

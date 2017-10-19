@@ -11,12 +11,8 @@ const create = async (ctx) => {
     basepath,
     desc,
     project_type,
-    members: [
-      {
-        uid: id,
-        role: 'owner',
-      },
-    ],
+    owner: id,
+    members: [id],
   });
   try {
     await newProjetc.save();
@@ -56,8 +52,8 @@ const alllist = async (ctx) => {
     const doc = await Project.find({});
     const projects = doc.filter((item) => {
       if (item.project_type === 'public') return item;
-      const findUser = item.members.find((subItem) => {
-        return subItem.uid === id;
+      const findUser = item.members.find((uid) => {
+        return uid === id;
       });
       if (findUser) return item;
     });
@@ -72,11 +68,43 @@ const getOne = async (ctx) => {
   const projectId = ctx.params.id;
   const {id} = ctx.req.user;
   try {
-    const doc = await Project.find({'_id': projectId, 'members.uid': id});
+    const doc = await Project.find({'_id': projectId, 'members': id});
     if (doc.length) {
       ctx.body = {success: true, data: doc};
     } else {
       ctx.body = {success: false, data: '没有权限'};
+    }
+  } catch (error) {
+    console.log(error);
+    ctx.body = {success: false, errMsg: error.message};
+  }
+};
+
+const addMembers = async (ctx) => {
+  const {id} = ctx.req.user;
+  const {projectId, userIds} = ctx.request.body;
+  const list = userIds.split(',').filter((item) => item.trim());
+  try {
+    if (!list.length) throw new Error('没有用户');
+    const doc = await Project.update(
+      {
+        _id: projectId,
+        'owner': id,
+      },
+      {
+        '$addToSet':
+        {
+          members:
+          {
+            '$each': list,
+          },
+        },
+      }
+    );
+    if (doc.nModified) {
+      ctx.body = {success: true, data: '修改成功'};
+    } else {
+      ctx.body = {success: true, data: '修改失败'};
     }
   } catch (error) {
     console.log(error);
@@ -89,4 +117,5 @@ module.exports = {
   update,
   alllist,
   getOne,
+  addMembers,
 };

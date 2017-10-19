@@ -8,7 +8,7 @@ const {
 const {isAuthenticated} = require('../auth/auth.service');
 
 router.post('/registered', registered);
-router.get('/checkLogin', isAuthenticated(), checkLogin);
+router.get('/checklogin', isAuthenticated(), checkLogin);
 router.post('/update', isAuthenticated(), update);
 router.get('/userinfo', isAuthenticated(), userinfo);
 

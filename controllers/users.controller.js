@@ -28,20 +28,29 @@ const checkLogin = async (ctx) => {
 };
 
 const update = async (ctx) => {
-  const {username, email, id} = ctx.request.body;
-  const map = {
-    updated: new Date().toLocaleString(),
-  };
-  if (username) map.username = username;
-  if (email) map.email = email;
+  const {username, email, newPasswd, confirmNewPasswd, oldPasswd} = ctx.request.body;
+  const user = ctx.req.user;
+  if (!username) {
+    return ctx.body = {success: false, errMsg: '用户名不能为空'};
+  }
+  if (!email) {
+    return ctx.body = {success: false, errMsg: 'email不能为空'};
+  }
+  if (newPasswd !== confirmNewPasswd) {
+    return ctx.body = {success: false, errMsg: '两次密码不一样'};
+  }
+  if (!user.authenticate(oldPasswd)) {
+    return ctx.body = {success: false, errMsg: '旧密码输入错误'};
+  }
+  user.password = newPasswd;
+  user.username = username;
+  user.email = email.toLowerCase();
   try {
-    console.log(map);
-    await User.findByIdAndUpdate({_id: id}, {$set: map});
+    await user.save();
     ctx.body = {success: true};
   } catch (error) {
     console.log(error);
     ctx.body = error;
-    // ctx.body = {errMsg: '错误', success: false};
   }
 };
 

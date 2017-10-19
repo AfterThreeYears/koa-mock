@@ -32,7 +32,7 @@ const update = async (ctx) => {
   if (!project_type) return ctx.body = {success: false, errMsg: '项目类型是必填的'};
   try {
     const doc = await Project.findOneAndUpdate(
-      {_id: projectId, 'members.uid': id},
+      {_id: projectId, 'members': id},
       {name, basepath, desc, project_type}
     );
     if (!doc) throw new Error('没有权限');
@@ -112,10 +112,27 @@ const addMembers = async (ctx) => {
   }
 };
 
+const remove = async (ctx) => {
+  const {projectId} = ctx.request.body;
+  const {id} = ctx.req.user;
+  try {
+    if (!projectId) throw new Error('没有项目id');
+    const doc = await Project.remove({_id: projectId, owner: id});
+    if (!doc.n) {
+      throw new Error('删除失败');
+    }
+    ctx.body = {success: true, data: '删除成功'};
+  } catch (error) {
+    console.log(error);
+    ctx.body = {success: false, errMsg: error.message};
+  }
+};
+
 module.exports = {
   create,
   update,
   alllist,
   getOne,
   addMembers,
+  remove,
 };

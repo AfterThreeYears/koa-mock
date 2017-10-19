@@ -3,7 +3,7 @@ const {errMsgFormat} = require('../util/tools');
 
 const create = async (ctx) => {
   const {name, basepath, desc, project_type} = ctx.request.body;
-  const {uid, username, email} = ctx.req.user;
+  const {id} = ctx.req.user;
   if (!name) ctx.body = {success: false, errMsg: '项目名是必填的'};
   if (!project_type) ctx.body = {success: false, errMsg: '项目类型是必填的'};
   const newProjetc = new Project({
@@ -13,10 +13,8 @@ const create = async (ctx) => {
     project_type,
     members: [
       {
-        uid,
+        uid: id,
         role: 'owner',
-        username,
-        email,
       },
     ],
   });
@@ -32,13 +30,13 @@ const create = async (ctx) => {
 };
 
 const update = async (ctx) => {
-  const {name, basepath, desc, project_type, id} = ctx.request.body;
-  const {username} = ctx.req.user;
+  const {name, basepath, desc, project_type, projectId} = ctx.request.body;
+  const {id} = ctx.req.user;
   if (!name) return ctx.body = {success: false, errMsg: '项目名是必填的'};
   if (!project_type) return ctx.body = {success: false, errMsg: '项目类型是必填的'};
   try {
     const doc = await Project.findOneAndUpdate(
-      {_id: id, 'members.username': username},
+      {_id: projectId, 'members.uid': id},
       {name, basepath, desc, project_type}
     );
     if (!doc) throw new Error('没有权限');
@@ -53,13 +51,13 @@ const update = async (ctx) => {
 };
 
 const alllist = async (ctx) => {
-  const {username} = ctx.req.user;
+  const {id} = ctx.req.user;
   try {
     const doc = await Project.find({});
     const projects = doc.filter((item) => {
       if (item.project_type === 'public') return item;
       const findUser = item.members.find((subItem) => {
-        return subItem.username === username;
+        return subItem.uid === id;
       });
       if (findUser) return item;
     });
@@ -71,10 +69,15 @@ const alllist = async (ctx) => {
 };
 
 const getOne = async (ctx) => {
-  const id = ctx.params.id;
+  const projectId = ctx.params.id;
+  const {id} = ctx.req.user;
   try {
-    const doc = await Project.findById({_id: id});
-    ctx.body = {success: true, data: doc};
+    const doc = await Project.find({'_id': projectId, 'members.uid': id});
+    if (doc.length) {
+      ctx.body = {success: true, data: doc};
+    } else {
+      ctx.body = {success: false, data: '没有权限'};
+    }
   } catch (error) {
     console.log(error);
     ctx.body = {success: false, errMsg: error.message};

@@ -18,13 +18,11 @@ const ProjectSchema = new Schema({
   },
   members: [
     {
-      uid: Number,
+      uid: String,
       role: {
         type: String,
         enum: ['owner', 'dev'],
       },
-      username: String,
-      email: String,
     },
   ],
   createTime: {

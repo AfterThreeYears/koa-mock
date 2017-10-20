@@ -11,7 +11,7 @@ const ProjectSchema = new Schema({
     default: '/',
   },
   desc: String,
-  project_type: {
+  projectType: {
     type: String,
     required: true,
     enum: ['public', 'private'],

@@ -10,7 +10,7 @@ const InterfaceSchema = new Schema({
     type: String,
     required: true,
   },
-  project_id: {
+  projectId: {
     type: String,
     required: true,
   },
@@ -19,27 +19,27 @@ const InterfaceSchema = new Schema({
     required: true,
   },
   // 创建人id
-  create_id: {
+  createId: {
     type: String,
+    required: true,
   },
-  req_query: [{
-    key: String,
-    value: String,
-  }],
-  req_body_type: {
+  // 编辑人id
+  editerId: {
+    type: String,
+    required: true,
+  },
+  reqQuery: Array,
+  reqBodyType: {
     type: String,
     enum: ['form', 'json', 'text', 'file', 'raw'],
   },
-  req_body_form: [{
-    key: String,
-    value: String,
-  }],
-  req_body_other: String,
-  res_body_type: {
+  reqBodyForm: Array,
+  reqBodyOther: String,
+  resBodyType: {
     type: String,
     enum: ['json', 'text', 'xml', 'raw'],
   },
-  res_body: String,
+  resBody: String,
   createTime: {
     type: Date,
     default: Date.now,

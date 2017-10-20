@@ -2,15 +2,15 @@ const Project = require('../models/projects.model');
 const {errMsgFormat} = require('../util/tools');
 
 const create = async (ctx) => {
-  const {name, basepath, desc, project_type} = ctx.request.body;
+  const {name, basepath, desc, projectType} = ctx.request.body;
   const {id} = ctx.req.user;
   if (!name) ctx.body = {success: false, errMsg: '项目名是必填的'};
-  if (!project_type) ctx.body = {success: false, errMsg: '项目类型是必填的'};
+  if (!projectType) ctx.body = {success: false, errMsg: '项目类型是必填的'};
   const newProjetc = new Project({
     name,
     basepath,
     desc,
-    project_type,
+    projectType,
     owner: id,
     members: [id],
   });
@@ -26,14 +26,14 @@ const create = async (ctx) => {
 };
 
 const update = async (ctx) => {
-  const {name, basepath, desc, project_type, projectId} = ctx.request.body;
+  const {name, basepath, desc, projectType, projectId} = ctx.request.body;
   const {id} = ctx.req.user;
   if (!name) return ctx.body = {success: false, errMsg: '项目名是必填的'};
-  if (!project_type) return ctx.body = {success: false, errMsg: '项目类型是必填的'};
+  if (!projectType) return ctx.body = {success: false, errMsg: '项目类型是必填的'};
   try {
     const doc = await Project.findOneAndUpdate(
       {_id: projectId, 'members': id},
-      {name, basepath, desc, project_type}
+      {name, basepath, desc, projectType}
     );
     if (!doc) throw new Error('没有权限');
     ctx.body = doc;
@@ -51,7 +51,7 @@ const alllist = async (ctx) => {
   try {
     const doc = await Project.find({});
     const projects = doc.filter((item) => {
-      if (item.project_type === 'public') return item;
+      if (item.projectType === 'public') return item;
       const findUser = item.members.find((uid) => {
         return uid === id;
       });
